@@ -20,39 +20,47 @@ DEFAULT_FG="$(printf '\033[39m')"  DEFAULT_BG="$(printf '\033[49m')"
 ALACRITTY_DIR="$HOME/.config/alacritty/"
 THEMES_DIR="$CURRENT_DIR/"alacritty-theme/themes"" 
 check_files () {
-    if [[ "$1" = colors ]]; then
-        colors=($(ls $ALACRITTY_DIR))
+    if [[ "$1" = themes ]]; then
+        themes=($(ls $THEMES_DIR))
         echo ${#themes[@]}
     fi
     return
 }
 total_themes=$(check_files themes)
+echo $total_themes
 apply_themes() {
   local count=1
   THEMES=($(ls $THEMES_DIR))
-  for i in ${THEMES[@]}; do
+  for i in "${THEMES[@]}"; do
     Themes_name=$(echo $i)
     echo ${ORANGE}"    [$count] ${Themes_name%.*}"
     count=$(($count+1))
   done
   { echo; read -p ${CYAN}"    [${RED}Select Themes (1 to $total_themes)${CYAN}]: ${GREEN}" answer; echo; }
   if [[ (-n "$answer") && ("$answer" -le $total_themes) ]]; then
-        scheme=${THEMES[(( answer - 1 ))]}
-        echo "    ${BLUE}[${RED}*${BLUE}] ${ORANGE}Applying Theme..."
-        cat $THEMES_DIR/$scheme > $ALACRITTY_DIR/colors.yml
+    scheme=${THEMES[(( answer - 1 ))]}
+    echo "    ${BLUE}[${RED}*${BLUE}] ${ORANGE}Applying Theme..."
+    cat $THEMES_DIR/$scheme > $ALACRITTY_DIR/alacritty.yml
   else
-      echo -n "    ${BLUE}[${RED}!${BLUE}] ${RED}Invalid Option, Try Again."
-      { sleep 1; echo; apply_themes; }
+    echo -n "    ${BLUE}[${RED}!${BLUE}] ${RED}Invalid Option, Try Again."
+    { sleep 1; echo; apply_themes; }
   fi
     return
 }
-echo "
+until [[ "$REPLY" =~ ^[q/Q]$ ]]; do
+  clear
+  echo "
   ${BLUE}[${RED}T${BLUE}] ${ORANGE}Themes
   ${BLUE}[${RED}F${BLUE}] ${CYAN}Fonts (Coming soon...)
-"
-
-{ read -p ${BLUE}"    [${RED}Select Option${BLUE}]: ${GREEN}" ; echo; }
-if [[ "$REPLY" =~ ^[t/T]$ ]]; then
-  apply_themes
-fi
-##echo "    ${BLUE}[${RED}*${BLUE}] ${RED}Bye Bye, Have A Nice Day!";exit 0;
+  "
+  { read -p ${BLUE}"    [${RED}Select Option${BLUE}]: ${GREEN}"; echo; }
+  if [[ $REPLY =~ ^[t/T]$ ]]; then
+    apply_themes
+  elif [[ $REPLY =~ ^[q/Q]$ ]]; then 
+    exit
+  elif [[ $REPLY =~ ^[f/F]$ ]]; then 
+    echo ${CYAN}Coming Soon...
+  else
+    echo $(RED)Invalid Option
+  fi
+done
