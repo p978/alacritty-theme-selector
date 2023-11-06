@@ -17,15 +17,34 @@ MAGENTABG="$(printf '\033[45m')"  CYANBG="$(printf '\033[46m')"  WHITEBG="$(prin
 DEFAULT_FG="$(printf '\033[39m')"  DEFAULT_BG="$(printf '\033[49m')"
 
 ## Directories
-KITTY_DIR="$HOME/.config/alacritty/"
+ALACRITTY_DIR="$HOME/.config/alacritty/"
 THEMES_DIR="$CURRENT_DIR/"alacritty-theme/themes"" 
+check_files () {
+    if [[ "$1" = colors ]]; then
+        colors=($(ls $ALACRITTY_DIR))
+        echo ${#themes[@]}
+    fi
+    return
+}
+total_themes=$(check_files themes)
 apply_themes() {
-  count=1
+  local count=1
   THEMES=($(ls $THEMES_DIR))
   for i in ${THEMES[@]}; do
-    echo [$((count++))] $i
+    Themes_name=$(echo $i)
+    echo ${ORANGE}"    [$count] ${Themes_name%.*}"
+    count=$(($count+1))
   done
-  { read -p ${CYAN}"[${BLUE} Select Themes ${CYAN}]:"; echo; }
+  { echo; read -p ${CYAN}"    [${RED}Select Themes (1 to $total_themes)${CYAN}]: ${GREEN}" answer; echo; }
+  if [[ (-n "$answer") && ("$answer" -le $total_themes) ]]; then
+        scheme=${THEMES[(( answer - 1 ))]}
+        echo "    ${BLUE}[${RED}*${BLUE}] ${ORANGE}Applying Theme..."
+        cat $THEMES_DIR/$scheme > $ALACRITTY_DIR/colors.yml
+  else
+      echo -n "    ${BLUE}[${RED}!${BLUE}] ${RED}Invalid Option, Try Again."
+      { sleep 1; echo; apply_themes; }
+  fi
+    return
 }
 echo "
   ${BLUE}[${RED}T${BLUE}] ${ORANGE}Themes
