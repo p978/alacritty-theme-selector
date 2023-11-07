@@ -1,5 +1,8 @@
 # Theme-Selector
 
+
+![gif](images/main.gif) <br />
+
 Simple script to change color-schemes and fonts for Alacritty terminal.
 
 ### How to install
@@ -20,3 +23,18 @@ cd alacritty-theme-selector
 
 # And Follow the steps, it'll be installed on your system.
 ```
+
+### Run
+
+Run `al-theme` to start the script.
+``` bash
+[T] Themes
+[F] Fonts (Coming soon...)
+[Select Option]:
+```
+
+### Features
+
++ 104 popular color-schemes.
++ Fonts(Coming Soon ...)
++ Adding other schemes(Coming Soon...)
