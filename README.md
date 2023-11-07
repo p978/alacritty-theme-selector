@@ -13,7 +13,6 @@ cd $HOME
 # clone this repository - 
 git clone https://github.com/p978/alacritty-theme-selector.git
 
-# change to kitty-cat dir -
 cd alacritty-theme-selector
 
 # to install it, run -
