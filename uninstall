@@ -1,0 +1,6 @@
+#!/bin/bash 
+
+CYAN="$(printf '\033[36m')"  WHITE="$(printf '\033[37m')"
+echo "${$CYAN} Uninstalling please wait"
+sudo rm -rf /usr/bin/al-theme
+echo "${WHITE} Uninstalled"
