@@ -1,11 +1,11 @@
 #!/bin/bash
 CURRENT_DIR="$(pwd)"
-if [[ -d $CURRENT_DIR/"alacritty-theme" ]]; then
+if [[ -d "~/.config/alacritty/alacritty-theme" ]]; then
   echo ""
 else   
   git clone -n --depth=1 --filter=tree:0 \
-    https://github.com/alacritty/alacritty-theme
-  cd alacritty-theme
+    https://github.com/alacritty/alacritty-theme ~/.config/alacritty/alacritty-theme
+  cd ~/.config/alacritty/alacritty-theme
   git sparse-checkout set --no-cone themes
   git checkout
 fi
@@ -18,7 +18,7 @@ DEFAULT_FG="$(printf '\033[39m')"  DEFAULT_BG="$(printf '\033[49m')"
 
 ## Directories
 ALACRITTY_DIR="$HOME/.config/alacritty/"
-THEMES_DIR="$CURRENT_DIR/"alacritty-theme/themes"" 
+THEMES_DIR="$HOME/.config/alacritty/alacritty-theme/themes"
 check_files () {
     if [[ "$1" = themes ]]; then
         themes=($(ls $THEMES_DIR))
