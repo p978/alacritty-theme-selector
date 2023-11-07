@@ -38,3 +38,9 @@ Run `al-theme` to start the script.
 + 104 popular color-schemes.
 + Fonts(Coming Soon ...)
 + Adding other schemes(Coming Soon...)
+
+### How to uninstall
+```bash
+# run the uninstall script in the repo
+./uninstall
+```
