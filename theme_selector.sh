@@ -79,7 +79,7 @@ until [[ "$REPLY" =~ ^[q/Q]$ ]]; do
   clear
   echo "
   ${BLUE}[${RED}T${BLUE}] ${ORANGE}Themes
-  ${BLUE}[${RED}F${BLUE}] ${CYAN}Fonts (Coming soon...)
+  ${BLUE}[${RED}F${BLUE}] ${CYAN}Fonts
   ${BLUE}[${RED}Q${BLUE}] ${ORANGE}Quit
   "
   { read -p ${BLUE}"    [${RED}Select Option${BLUE}]: ${GREEN}"; echo; }
