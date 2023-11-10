@@ -1,14 +1,5 @@
 #!/bin/bash
 CURRENT_DIR="$(pwd)"
-if [[ -d "~/.config/alacritty/alacritty-theme" ]]; then
-  echo ""
-else   
-  git clone -n --depth=1 --filter=tree:0 \
-    https://github.com/alacritty/alacritty-theme ~/.config/alacritty/alacritty-theme
-  cd ~/.config/alacritty/alacritty-theme
-  git sparse-checkout set --no-cone themes
-  git checkout
-fi
 ## Colors
 RED="$(printf '\033[31m')"  GREEN="$(printf '\033[32m')"  ORANGE="$(printf '\033[33m')"  BLUE="$(printf '\033[34m')"
 MAGENTA="$(printf '\033[35m')"  CYAN="$(printf '\033[36m')"  WHITE="$(printf '\033[37m')" BLACK="$(printf '\033[30m')"
@@ -18,16 +9,22 @@ DEFAULT_FG="$(printf '\033[39m')"  DEFAULT_BG="$(printf '\033[49m')"
 
 ## Directories
 ALACRITTY_DIR="$HOME/.config/alacritty/"
+FONTS_DIR="$HOME/.config/alacritty/alacritty-theme/fonts"
 THEMES_DIR="$HOME/.config/alacritty/alacritty-theme/themes"
 check_files () {
     if [[ "$1" = themes ]]; then
         themes=($(ls $THEMES_DIR))
-        echo ${#themes[@]}
+        echo ${#themes[@]} 
+    elif [[ "$1" = fonts ]]; then
+      fonts=($(ls $FONTS_DIR))
+      echo ${#fonts[@]}
     fi
     return
+
 }
 total_themes=$(check_files themes)
-echo $total_themes
+total_fonts=$(check_files fonts)
+echo $total_fonts
 apply_themes() {
   local count=1
   THEMES=($(ls $THEMES_DIR))
@@ -40,10 +37,41 @@ apply_themes() {
   if [[ (-n "$answer") && ("$answer" -le $total_themes) ]]; then
     scheme=${THEMES[(( answer - 1 ))]}
     echo "    ${BLUE}[${RED}*${BLUE}] ${ORANGE}Applying Theme..."
-    cat $THEMES_DIR/$scheme > $ALACRITTY_DIR/alacritty.yml
+    cat $THEMES_DIR/$scheme >> $ALACRITTY_DIR/alacritty.yml
   else
     echo -n "    ${BLUE}[${RED}!${BLUE}] ${RED}Invalid Option, Try Again."
     { sleep 1; echo; apply_themes; }
+  fi
+    return
+}
+apply_fonts(){
+  local count=1
+  cp ~/.config/alacritty/alacritty-theme/fonts/* ~/.fonts
+  FONTS=($(ls $FONTS_DIR))
+  for i in "${FONTS[@]}"; do
+    Font_names=$(echo $i)
+    echo ${ORANGE}"   [$count] ${Font_names%.*}"
+    count=$(($count+1))
+  done
+  { echo; read -p ${CYAN}"    [${RED}Select Fonts (1 to $total_fonts)${CYAN}]: ${GREEN}" answer; echo; }
+  if [[ (-n "$answer") && ("$answer" -le $total_fonts) ]]; then
+    echo "    ${BLUE}[${RED}*${BLUE}] ${ORANGE}Applying Font..."
+    foa=${FONTS[(( answer-1 ))]}
+    echo "font:
+  # Normal (roman) font face
+   normal:
+    # Font family
+    #
+    # Default:
+    #   - (macOS) Menlo
+    #   - (Linux/BSD) monospace
+    #   - (Windows) Consolas
+    family: ${foa/%.ttf/ }
+    style: Regular" >> ~/.config/alacritty/alacritty.yml
+    sleep 1 
+  else
+    echo -n "    ${BLUE}[${RED}!${BLUE}] ${RED}Invalid Option, Try Again."
+    { sleep 1; echo; apply_fonts; }
   fi
     return
 }
@@ -52,14 +80,15 @@ until [[ "$REPLY" =~ ^[q/Q]$ ]]; do
   echo "
   ${BLUE}[${RED}T${BLUE}] ${ORANGE}Themes
   ${BLUE}[${RED}F${BLUE}] ${CYAN}Fonts (Coming soon...)
+  ${BLUE}[${RED}Q${BLUE}] ${ORANGE}Quit
   "
   { read -p ${BLUE}"    [${RED}Select Option${BLUE}]: ${GREEN}"; echo; }
   if [[ $REPLY =~ ^[t/T]$ ]]; then
     apply_themes
   elif [[ $REPLY =~ ^[q/Q]$ ]]; then 
     exit
-  elif [[ $REPLY =~ ^[f/F]$ ]]; then 
-    echo ${CYAN}Coming Soon...
+  elif [[ $REPLY =~ ^[f/F]$ ]]; then
+    apply_fonts
   else
     echo $(RED)Invalid Option
   fi

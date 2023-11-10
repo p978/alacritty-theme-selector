@@ -2,5 +2,6 @@
 RED="$(printf '\033[31m')"  GREEN="$(printf '\033[32m')"
 echo "${RED} Installing please wait..."
 chmod +x ./theme_selector.sh
+cp -r alacritty-theme ~/.config/alacritty/
 sudo cp theme_selector.sh /usr/bin/al-theme
 echo "${GREEN} Installed. Type al-theme to start"
