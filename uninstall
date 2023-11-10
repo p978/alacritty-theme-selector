@@ -2,5 +2,6 @@
 
 CYAN="$(printf '\033[36m')"  WHITE="$(printf '\033[37m')"
 echo "${CYAN} Uninstalling please wait"
+rm -rf ~/.config/alacritty/alacritty-theme/
 sudo rm -rf /usr/bin/al-theme
 echo "${WHITE} Uninstalled"
