@@ -36,8 +36,17 @@ Run `al-theme` to start the script.
 ### Features
 
 + 104 popular color-schemes.
-+ Fonts(Coming Soon ...)
-+ Adding other schemes(Coming Soon...)
++ Fonts
++ Adding other themes
++ Adding fonts
+
+### Adding new Fonts
+
+Copy your font files and paste them in `~/.fonts` and `~/.config/alacritty/alacritty-theme/fonts`
+
+### Adding new themes
+
+To add new themes just paste the theme file in   `~/.config/alacritty/alacritty-theme/themes`
 
 ### How to uninstall
 ```bash
